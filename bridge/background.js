@@ -8,9 +8,12 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   port.onMessage.addListener(function (m) {
     console.log('onMessage:',m);
-    portArrCache.forEach(function (p) {
+
+    portArrCache.filter(function (p) {
+      return p !== port
+    }).forEach(function (p) {
       p.postMessage({
-        m:m
+        ga:m
       });
     });
   });
@@ -26,7 +29,13 @@ chrome.runtime.onConnect.addListener(function (port) {
 chrome.webRequest.onCompleted.addListener(function (details) {
   var url = details.url;
 
+  var code = details.statusCode;
 
+  portArrCache.forEach(function(p){
+    p.postMessage({
+      headers:headers
+    })
+  })
 
   if(/\/use\.jpg/.test(url)){
 
@@ -51,4 +60,16 @@ chrome.webRequest.onCompleted.addListener(function (details) {
       });
     });
   }
+
+  if(code >= 500){
+    portArrCache.forEach(function (p) {
+      p.postMessage({
+        code500:{
+          url:url,
+          code:code,
+        }
+      });
+    });
+  }
+
 },{urls: ["<all_urls>"]});

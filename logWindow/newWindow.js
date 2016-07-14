@@ -15,11 +15,11 @@ var count = 0;
 port.onMessage.addListener(function (m) {
   console.log(m);
 
-  if(m.m) {
-    title = m.m.title;
+  if(m.ga) {
+    title = m.ga.title;
     currentTitle.innerText = title;
 
-    finalGa.innerText = title + '|' + m.m.ga;
+    finalGa.innerText = title + '|' + m.ga.ga;
   }
   if(m.req){
     record.value = title + '|' + m.req.ga + '\n' + '-------'+(++count)+'------ \n' + record.value;
