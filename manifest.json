@@ -1,0 +1,46 @@
+{
+  "manifest_version": 2,
+
+  "name": "data-ga 日志",
+  "description": "This extension shows a Google Image search result for the current page",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "logo.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "<all_urls>",
+    "webRequest",
+    "tabs"
+  ],
+  "background":{
+    "page":"bridge/background.html"
+  },
+  "externally_connectable": {
+    "ids": ["*"],
+    "matches":[
+      "http://localhost//*",
+      "*://meidian-1.play.admin.jaeapp.com/*"
+    ]
+  },
+  "web_accessible_resources": ["inject/monitorError.js"],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://meidian-1.play.admin.jaeapp.com/*",
+        "*://meidian.play.admin.jaeapp.com/*",
+        "*://mdback1.ews.m.jaeapp.com/*",
+        "*://mdh51.ews.m.jaeapp.com/*",
+        "*://mdbackpre.ews.m.jaeapp.com/*",
+        "*://mdhpre.ews.m.jaeapp.com/*",
+        "*://*.taobao.com/*",
+        "*://localhost/*",
+        "*://127.0.0.1/*"
+      ],
+      "js": ["inject/contentScript.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}

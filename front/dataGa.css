@@ -1,0 +1,19 @@
+#gaBox{
+    background-color: rgb(16,16,16);
+    border: 1px solid #000;
+    padding: 10px;
+    width: 300px;
+    height: 60px;
+
+    z-index: 999999;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+#gaBox .logs{
+    color: #ffffff;
+}
+#gaBox .req-logs{
+    margin-top: 10px;
+    color: #ffffff;
+}
