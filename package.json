@@ -1,0 +1,22 @@
+{
+  "name": "javascript-monitor",
+  "version": "1.0.0",
+  "description": "js develop assistant,for monitor js variables,  window.error notify, unusual network request etc.",
+  "main": "popup.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JavascriptTips/javascript-monitor.git"
+  },
+  "author": "",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/JavascriptTips/javascript-monitor/issues"
+  },
+  "homepage": "https://github.com/JavascriptTips/javascript-monitor#readme",
+  "dependencies": {
+    "webpack": "^1.13.1"
+  }
+}

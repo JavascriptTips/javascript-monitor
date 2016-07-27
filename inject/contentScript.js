@@ -1,16 +1,15 @@
-function loadJs(jsPath){
-  var s = document.createElement('script');
-  s.type = 'text/javascript';
+/**
+ * Created by zyg on 16/7/14.
+ */
+var notify = require('./common/notify')
+var loadJs = require('./common/loadJs')
 
-  s.src = chrome.extension.getURL(jsPath);
-  (document.head || document.documentElement).appendChild(s);
-}
-loadJs('inject/notify.js')
-loadJs('inject/monitorError.js')
+loadJs('/dist/window.bundle.js')
 
-var notify = createNotify('网络500')
-
+//连接信息，监听dom
 document.addEventListener('DOMContentLoaded', function () {
+
+  var myNotify = notify.createNotify('网络500')
 
   var body = document.body;
 
@@ -19,8 +18,18 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('断开了');
   });
   port.onMessage.addListener(function (m) {
+
+    console.log(m);
+    switch (m.type){
+      case 'VW':
+        location.reload();
+        break;
+    }
+
     if(m.code500){
-      notify(m.code500.url, m.code500.code)
+      notify.createNotificationObj(function(){
+        myNotify(m.code500.url, m.code500.code)
+      })
     }
   })
 

@@ -12,7 +12,8 @@
   "permissions": [
     "<all_urls>",
     "webRequest",
-    "tabs"
+    "tabs",
+    "webRequestBlocking"
   ],
   "background":{
     "page":"bridge/background.html"
@@ -24,7 +25,9 @@
       "*://meidian-1.play.admin.jaeapp.com/*"
     ]
   },
-  "web_accessible_resources": ["inject/monitorError.js"],
+  "web_accessible_resources": [
+    "dist/window.bundle.js"
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -38,7 +41,7 @@
         "*://localhost/*",
         "*://127.0.0.1/*"
       ],
-      "js": ["inject/contentScript.js"],
+      "js": ["dist/contentScript.bundle.js"],
       "run_at": "document_start",
       "all_frames": true
     }

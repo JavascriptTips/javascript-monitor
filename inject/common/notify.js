@@ -1,24 +1,26 @@
 /**
  * Created by zyg on 16/7/14.
  */
+var notifyArr = []
+
 function createNotificationObj(cb) {
-  var permission = Notification.permission;
+  var permission = Notification.permission
   if(permission === 'granted'){
-    cb(true);
+    cb(true)
   }else{
     Notification.requestPermission(function(p){
       if(p === 'granted'){
-        cb(true);
+        cb(true)
       }else{
-        cb(false);
+        cb(false)
       }
-    });
+    })
   }
 }
 function clear(notification){
-  notifyArr.push(notification);
+  notifyArr.push(notification)
   if(notifyArr.length > 3 ){
-    notifyArr.shift().close();
+    notifyArr.shift().close()
   }
 }
 
@@ -28,9 +30,14 @@ function createNotify(title){
     var notification = new Notification(title,{
       body:pre+':'+msg,
       //icon:'../images/red.png'
-    });
+    })
 
     clear(notification)
   }
 }
-var notifyArr = [];
+
+module.exports = {
+  createNotificationObj:createNotificationObj,
+  clear:clear,
+  createNotify:createNotify,
+}
