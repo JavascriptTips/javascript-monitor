@@ -1,6 +1,7 @@
 /**
  * Created by zyg on 16/7/14.
  */
+var msgType = require('./common/msgType')
 var notify = require('./common/notify')
 var loadJs = require('./common/loadJs')
 
@@ -19,10 +20,12 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   port.onMessage.addListener(function (m) {
 
-    console.log(m);
     switch (m.type){
-      case 'VW':
+      case msgType.VW:
         location.reload();
+        break;
+      case  msgType.BAN_JS:
+        console.log(m.message)
         break;
     }
 
@@ -45,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!ga) {
       return;
     }
-    console.log(ga);
+    //console.log(ga);
 
     sendMessage({
       title:document.title,
@@ -55,23 +58,22 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-
-//代理
-var _XMLHttpRequest = window.XMLHttpRequest;
-window.XMLHttpRequest = function(){
-  var req = new _XMLHttpRequest();
-
-  var _open = req.open;
-  var _send = req.send;
-
-  req.open = function(type, url, async){
-    console.log('req:',url);
-    _open.apply(req, arguments)
-  };
-  req.send = function (data) {
-    console.log('req:',data);
-    _send.apply(req,arguments)
-  };
-
-  return req;
-};
+////代理
+//var _XMLHttpRequest = window.XMLHttpRequest;
+//window.XMLHttpRequest = function(){
+//  var req = new _XMLHttpRequest();
+//
+//  var _open = req.open;
+//  var _send = req.send;
+//
+//  req.open = function(type, url, async){
+//    console.log('req:',url);
+//    _open.apply(req, arguments)
+//  };
+//  req.send = function (data) {
+//    console.log('req:',data);
+//    _send.apply(req,arguments)
+//  };
+//
+//  return req;
+//};

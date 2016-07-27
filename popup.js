@@ -1,4 +1,3 @@
-var extensionId = 'hbpnmcfijddjekpmkdiippnmcgkpclia';
 
 //
 //document.querySelector('.new-window').onclick = function () {
@@ -16,36 +15,11 @@ var extensionId = 'hbpnmcfijddjekpmkdiippnmcgkpclia';
 
 document.querySelector('.variables-monitor').onclick = function () {
 
-  chrome.windows.create({
-    top: 110,
-    left: 0,
-    width: 230,
-    height: 300,
-    type: 'popup',
-    url: 'popup/variablesWindow/index.html'
-  }, function (win) {
+  var msgType = require('../../inject/common/msgType')
 
-    chrome.windows.getAll({
-      windowTypes:['popup']
-    }, function (windowArr) {
+  var port = chrome.runtime.connect();
 
-      windowArr.forEach(function (winObj) {
-        if(winObj.id !== win.id){
-          chrome.windows.remove(winObj.id)
-        }
-      })
-    })
+  port.postMessage({
+    type:msgType.VW
   })
 };
-
-//chrome.tabs.query({
-//  active:true,
-//}, function (tabs) {
-//  tabs.map(function (tab) {
-//    chrome.tabs.executeScript({
-//      file:'inject/contentScript.js'
-//    }, function () {
-//      console.log('exe');
-//    })
-//  });
-//});

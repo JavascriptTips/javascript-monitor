@@ -17,7 +17,10 @@ module.exports = {
     filename: '[name].bundle.js'
   },
   module: {
-    loaders: []
+    loaders: [{
+      test:/\.css/,
+      loaders:['style','css']
+    }]
   },
   devTools: 'source-map'
 };
