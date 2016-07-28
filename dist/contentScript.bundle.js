@@ -63,7 +63,7 @@
 	    url += '&noBanJS'
 	  }
 
-	  var textReg = /\/\/wv@([\w]+\S)/g;
+	  var textReg = /\/\/j@([\w]+\S)/g;
 
 	  ajax(url).get().then(function (data) {
 
