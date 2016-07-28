@@ -40,16 +40,15 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by zyg on 16/7/27.
 	 */
 	console.log('variables window')
-	var msgType = __webpack_require__(5)
+	var msgType = __webpack_require__(1)
 
 	var port = chrome.runtime.connect();
 
@@ -58,8 +57,7 @@
 	})
 
 /***/ },
-
-/***/ 5:
+/* 1 */
 /***/ function(module, exports) {
 
 	/**
@@ -71,5 +69,4 @@
 	}
 
 /***/ }
-
-/******/ });
+/******/ ]);

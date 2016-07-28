@@ -1,3 +1,4 @@
+var msgType = require('./inject/common/msgType')
 
 //
 //document.querySelector('.new-window').onclick = function () {
@@ -14,8 +15,6 @@
 //};
 
 document.querySelector('.variables-monitor').onclick = function () {
-
-  var msgType = require('../../inject/common/msgType')
 
   var port = chrome.runtime.connect();
 

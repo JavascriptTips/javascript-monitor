@@ -47,9 +47,9 @@
 	/**
 	 * Created by zyg on 16/7/14.
 	 */
-	var msgType = __webpack_require__(5)
-	var notify = __webpack_require__(1)
-	var loadJs = __webpack_require__(2)
+	var msgType = __webpack_require__(1)
+	var notify = __webpack_require__(2)
+	var loadJs = __webpack_require__(3)
 
 	loadJs('/dist/window.bundle.js')
 
@@ -129,6 +129,18 @@
 /***/ function(module, exports) {
 
 	/**
+	 * Created by zyg on 16/7/27.
+	 */
+	module.exports = {
+	  VW:'VW',
+	  BAN_JS:'ban_js',
+	}
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	/**
 	 * Created by zyg on 16/7/14.
 	 */
 	var notifyArr = []
@@ -173,7 +185,7 @@
 	}
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 	/**
@@ -185,20 +197,6 @@
 
 	  s.src = chrome.extension.getURL(jsPath);
 	  (document.head || document.documentElement).appendChild(s);
-	}
-
-/***/ },
-/* 3 */,
-/* 4 */,
-/* 5 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by zyg on 16/7/27.
-	 */
-	module.exports = {
-	  VW:'VW',
-	  BAN_JS:'ban_js',
 	}
 
 /***/ }

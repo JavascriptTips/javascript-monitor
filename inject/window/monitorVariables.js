@@ -23,16 +23,19 @@ function equals(pre,next){
 }
 
 
-var raf;
+var raf,
+  count = 0
 function refresh(){
   cancelAnimationFrame(raf)
   raf = requestAnimationFrame(function(){
 
-    Object.keys(watchMap).forEach(function(k,i){
-      var variables = watchMap[k];
+    if((count++)%240 ===0) {
+      Object.keys(watchMap).forEach(function (k, i) {
+        var variables = watchMap[k];
 
-      monitorVariablesView.render(variables,i)
-    })
+        monitorVariablesView.render(variables, i)
+      })
+    }
 
     refresh()
   })
@@ -40,7 +43,7 @@ function refresh(){
 
 window.variablesWatch = function(dataName,getData){
 
-  var dataNameKey = dataName + Date.now()
+  var dataNameKey = dataName + Date.now() + Object.keys(watchMap).length
 
   watchMap[dataNameKey] = {
     name:dataName,
@@ -49,3 +52,14 @@ window.variablesWatch = function(dataName,getData){
 
   refresh()
 }
+
+i=0;
+variablesWatch('data',function(){
+  return i++
+})
+
+variablesWatch('data',function(){
+  return {
+    v:i++
+  }
+})

@@ -40,15 +40,14 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by zyg on 16/3/31.
 	 */
-	var msgType =__webpack_require__(5)
+	var msgType =__webpack_require__(1)
 	var portArrCache = [];
 
 	var openVariablesWatch = false;
@@ -192,8 +191,7 @@
 	}, {urls: ["<all_urls>"]});
 
 /***/ },
-
-/***/ 5:
+/* 1 */
 /***/ function(module, exports) {
 
 	/**
@@ -205,5 +203,4 @@
 	}
 
 /***/ }
-
-/******/ });
+/******/ ]);
