@@ -48,22 +48,12 @@
 	 * Created by zyg on 16/3/31.
 	 */
 	var msgType =__webpack_require__(1)
-	var portArrCache = [];
+	var sendMsgToTab = __webpack_require__(2)
 
 	var openVariablesWatch = false;
 
 	chrome.runtime.onConnect.addListener(function (port) {
-	  portArrCache.push(port);
-
-	  console.info(port)
-
-	  function broadCast(m){
-	    portArrCache.filter(function (p) {
-	      return p !== port
-	    }).forEach(function (p) {
-	      p.postMessage(m);
-	    });
-	  }
+	  sendMsgToTab.addTab(port)
 
 	  port.onMessage.addListener(function (m) {
 
@@ -74,44 +64,35 @@
 	      //开关变量监控
 	      case msgType.VW:
 	        openVariablesWatch = !openVariablesWatch;
-	        broadCast(m);
+	        console.log('openVariablesWatch:',openVariablesWatch);
+	        sendMsgToTab.broadcast(m,port);
 	        break;
 	      default:
-	        broadCast({
+	        sendMsgToTab.broadcast({
 	          ga:m
-	        });
+	        },port);
 	    }
 	  });
 
 	  port.onDisconnect.addListener(function () {
-	    portArrCache = portArrCache.filter(function (portCache) {
-	      return portCache !== port;
-	    })
+	    sendMsgToTab.delTab(port)
 	  });
 	});
 
-	function sendMsgToTab(tabId,msg){
-
-	  portArrCache.forEach(function(port){
-	    if(port.sender.tab.id === tabId){
-	      port.postMessage({
-	        type:msgType.BAN_JS,
-	        message:msg,
-	      })
-	    }
-	  })
-	}
 
 	var urlBeforeHandlers = [
 	  {
 	    test: function (details) {
 	      var url = details.url;
 
-	      return /\.js/.test(url) && !/chrome-extension/.test(url) && openVariablesWatch
+	      return /\.js/.test(url) &&
+	        !/chrome-extension/.test(url) &&
+	        !/noBanJS/.test(url) &&
+	        openVariablesWatch
 	    },
 	    handler: function (details) {
 
-	      sendMsgToTab(details.tabId,details.url)
+	      sendMsgToTab.sendByTabId(details.tabId,msgType.BAN_JS,details.url)
 
 	      return {
 	        redirectUrl: 'javascript:'
@@ -141,12 +122,10 @@
 
 	    console.log('ajax:', searchObj.tag);
 
-	    portArrCache.forEach(function (p) {
-	      p.postMessage({
-	        req: {
-	          ga: searchObj.tag,
-	        }
-	      });
+	    sendMsgToTab.broadcast({
+	      req: {
+	        ga: searchObj.tag,
+	      }
 	    });
 	  }
 	}, {
@@ -158,14 +137,12 @@
 	    var url = details.url;
 	    var code = details.statusCode;
 
-	    portArrCache.forEach(function (p) {
-	      p.postMessage({
-	        code500: {
-	          url: url,
-	          code: code,
-	        }
-	      });
-	    });
+	    sendMsgToTab.broadcast({
+	      code500: {
+	        url: url,
+	        code: code,
+	      }
+	    })
 	  }
 	}]
 
@@ -200,6 +177,87 @@
 	module.exports = {
 	  VW:'VW',
 	  BAN_JS:'ban_js',
+	}
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by zyg on 16/7/28.
+	 */
+
+	var portArrCache = [];
+
+	var tabMsgCache = {
+
+	}
+
+	function saveMsg(tabId,type,msg){
+	  if(!tabMsgCache[tabId]){
+	    tabMsgCache[tabId] = []
+	  }
+
+	  tabMsgCache[tabId].push({
+	    type:type,
+	    message:msg,
+	  })
+	}
+
+	function consumeMsg(tabId){
+	  if(!tabMsgCache[tabId]) {
+	    return false;
+	  }
+	  portArrCache.forEach(function(port){
+	    if(port.sender.tab){
+	      if(port.sender.tab.id === tabId){
+
+	        tabMsgCache[tabId] = tabMsgCache[tabId].filter(function(messageObj){
+	          port.postMessage(messageObj)
+	          return false;
+	        })
+	      }
+	    }
+	  })
+	}
+
+	function sendByTabId(tabId,type,msg){
+
+	  saveMsg(tabId,type,msg)
+
+	  consumeMsg(tabId);
+	}
+
+	function addTab(port){
+	  portArrCache.push(port)
+
+	  //只有浏览器的一个tab才有[tab]这个属性
+	  if(port.sender.tab){
+	    consumeMsg(port.sender.tab.id)
+	  }
+	}
+
+	function delTab(port){
+	  console.log('delTab',port)
+	  portArrCache = portArrCache.filter(function (portCache) {
+	    return portCache !== port;
+	  })
+	}
+
+	function broadcast(m,sender){
+	  portArrCache.filter(function (p) {
+	    return p !== sender
+	  }).forEach(function (p) {
+	    console.log(m);
+	    p.postMessage(m);
+	  });
+	}
+
+	module.exports = {
+	  addTab:addTab,
+	  delTab:delTab,
+	  sendByTabId:sendByTabId,
+	  broadcast:broadcast
 	}
 
 /***/ }

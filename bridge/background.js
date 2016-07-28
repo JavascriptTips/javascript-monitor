@@ -2,22 +2,12 @@
  * Created by zyg on 16/3/31.
  */
 var msgType =require('../inject/common/msgType')
-var portArrCache = [];
+var sendMsgToTab = require('./sendMsgToTab')
 
 var openVariablesWatch = false;
 
 chrome.runtime.onConnect.addListener(function (port) {
-  portArrCache.push(port);
-
-  console.info(port)
-
-  function broadCast(m){
-    portArrCache.filter(function (p) {
-      return p !== port
-    }).forEach(function (p) {
-      p.postMessage(m);
-    });
-  }
+  sendMsgToTab.addTab(port)
 
   port.onMessage.addListener(function (m) {
 
@@ -28,44 +18,35 @@ chrome.runtime.onConnect.addListener(function (port) {
       //开关变量监控
       case msgType.VW:
         openVariablesWatch = !openVariablesWatch;
-        broadCast(m);
+        console.log('openVariablesWatch:',openVariablesWatch);
+        sendMsgToTab.broadcast(m,port);
         break;
       default:
-        broadCast({
+        sendMsgToTab.broadcast({
           ga:m
-        });
+        },port);
     }
   });
 
   port.onDisconnect.addListener(function () {
-    portArrCache = portArrCache.filter(function (portCache) {
-      return portCache !== port;
-    })
+    sendMsgToTab.delTab(port)
   });
 });
 
-function sendMsgToTab(tabId,msg){
-
-  portArrCache.forEach(function(port){
-    if(port.sender.tab.id === tabId){
-      port.postMessage({
-        type:msgType.BAN_JS,
-        message:msg,
-      })
-    }
-  })
-}
 
 var urlBeforeHandlers = [
   {
     test: function (details) {
       var url = details.url;
 
-      return /\.js/.test(url) && !/chrome-extension/.test(url) && openVariablesWatch
+      return /\.js/.test(url) &&
+        !/chrome-extension/.test(url) &&
+        !/noBanJS/.test(url) &&
+        openVariablesWatch
     },
     handler: function (details) {
 
-      sendMsgToTab(details.tabId,details.url)
+      sendMsgToTab.sendByTabId(details.tabId,msgType.BAN_JS,details.url)
 
       return {
         redirectUrl: 'javascript:'
@@ -95,12 +76,10 @@ var urlCompletedHandlers = [{
 
     console.log('ajax:', searchObj.tag);
 
-    portArrCache.forEach(function (p) {
-      p.postMessage({
-        req: {
-          ga: searchObj.tag,
-        }
-      });
+    sendMsgToTab.broadcast({
+      req: {
+        ga: searchObj.tag,
+      }
     });
   }
 }, {
@@ -112,14 +91,12 @@ var urlCompletedHandlers = [{
     var url = details.url;
     var code = details.statusCode;
 
-    portArrCache.forEach(function (p) {
-      p.postMessage({
-        code500: {
-          url: url,
-          code: code,
-        }
-      });
-    });
+    sendMsgToTab.broadcast({
+      code500: {
+        url: url,
+        code: code,
+      }
+    })
   }
 }]
 

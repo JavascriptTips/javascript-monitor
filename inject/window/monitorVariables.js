@@ -4,23 +4,24 @@
 var extensionId = 'hbpnmcfijddjekpmkdiippnmcgkpclia';
 var _ = require('lodash')
 var monitorVariablesView = require('./monitorVariablesView')
+var msgType = require('../common/msgType')
 
 var watchMap = {};
 
-function equals(pre,next){
-  var r1 = pre !== next;
-
-  if(r1 && _.isObject(pre)){
-
-    return Object.getOwnPropertyNames(pre).every(function(k){
-      return pre[k] === next[k]
-    }) && Object.getOwnPropertyNames(next).every(function(k){
-        return next[k] === pre[k]
-      })
-  }else{
-    return r1
-  }
-}
+//function equals(pre,next){
+//  var r1 = pre !== next;
+//
+//  if(r1 && _.isObject(pre)){
+//
+//    return Object.getOwnPropertyNames(pre).every(function(k){
+//      return pre[k] === next[k]
+//    }) && Object.getOwnPropertyNames(next).every(function(k){
+//        return next[k] === pre[k]
+//      })
+//  }else{
+//    return r1
+//  }
+//}
 
 
 var raf,
@@ -41,6 +42,18 @@ function refresh(){
   })
 }
 
+var port = chrome.runtime.connect(extensionId)
+port.onMessage.addListener(function (m) {
+
+  console.log(m);
+
+  switch (m.type){
+    case msgType.BAN_JS:
+      reqScript(m.message);
+      break;
+  }
+})
+
 window.variablesWatch = function(dataName,getData){
 
   var dataNameKey = dataName + Date.now() + Object.keys(watchMap).length
@@ -52,14 +65,12 @@ window.variablesWatch = function(dataName,getData){
 
   refresh()
 }
-
-i=0;
-variablesWatch('data',function(){
-  return i++
-})
-
-variablesWatch('data',function(){
-  return {
-    v:i++
-  }
-})
+//
+//i=0;
+//variablesWatch('data',function(){return i++})
+//
+//variablesWatch('data',function(){
+//  return {
+//    v:i++
+//  }
+//})

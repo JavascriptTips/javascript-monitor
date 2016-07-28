@@ -5,7 +5,32 @@ var msgType = require('./common/msgType')
 var notify = require('./common/notify')
 var loadJs = require('./common/loadJs')
 
+var ajax = require('ajax-lite')
+
 loadJs('/dist/window.bundle.js')
+
+function reqScript(url){
+
+  if(url.indexOf('?') === -1){
+    url += '?noBanJS'
+  }else{
+    url += '&noBanJS'
+  }
+
+  var textReg = /\/\/wv@([\w]+\S)/g;
+
+  ajax(url).get().then(function (data) {
+
+    data = data.replace(textReg,function(all,matchV,index){
+      return 'variablesWatch("'+matchV+'",function(){return '+matchV+';})'
+    });
+
+    var s = document.createElement('script');
+    s.innerHTML = data;
+
+    document.body.appendChild(s);
+  })
+}
 
 //连接信息，监听dom
 document.addEventListener('DOMContentLoaded', function () {
@@ -25,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         location.reload();
         break;
       case  msgType.BAN_JS:
-        console.log(m.message)
+        reqScript(m.message);
         break;
     }
 
@@ -43,6 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
   sendMessage('init');
 
   body.addEventListener('mouseover', onMouseOver);
+
+
   function onMouseOver(e) {
     var ga = e.target.getAttribute('data-ga');
     if (!ga) {

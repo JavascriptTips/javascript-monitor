@@ -47,12 +47,24 @@
 	/**
 	 * Created by zyg on 16/7/27.
 	 */
-	__webpack_require__(4)
-	__webpack_require__(5)
+	__webpack_require__(6)
+	__webpack_require__(7)
 
 /***/ },
-/* 1 */,
-/* 2 */
+/* 1 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by zyg on 16/7/27.
+	 */
+	module.exports = {
+	  VW:'VW',
+	  BAN_JS:'ban_js',
+	}
+
+/***/ },
+/* 2 */,
+/* 3 */
 /***/ function(module, exports) {
 
 	/**
@@ -100,15 +112,16 @@
 	}
 
 /***/ },
-/* 3 */,
-/* 4 */
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by zyg on 16/7/14.
 	 */
 	//load notify
-	var notify = __webpack_require__(2);
+	var notify = __webpack_require__(3);
 
 
 	var myNotify = notify.createNotify('出错啦')
@@ -126,32 +139,33 @@
 	console.log('监控');
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by zyg on 16/7/25.
 	 */
 	var extensionId = 'hbpnmcfijddjekpmkdiippnmcgkpclia';
-	var _ = __webpack_require__(6)
-	var monitorVariablesView = __webpack_require__(8)
+	var _ = __webpack_require__(8)
+	var monitorVariablesView = __webpack_require__(10)
+	var msgType = __webpack_require__(1)
 
 	var watchMap = {};
 
-	function equals(pre,next){
-	  var r1 = pre !== next;
-
-	  if(r1 && _.isObject(pre)){
-
-	    return Object.getOwnPropertyNames(pre).every(function(k){
-	      return pre[k] === next[k]
-	    }) && Object.getOwnPropertyNames(next).every(function(k){
-	        return next[k] === pre[k]
-	      })
-	  }else{
-	    return r1
-	  }
-	}
+	//function equals(pre,next){
+	//  var r1 = pre !== next;
+	//
+	//  if(r1 && _.isObject(pre)){
+	//
+	//    return Object.getOwnPropertyNames(pre).every(function(k){
+	//      return pre[k] === next[k]
+	//    }) && Object.getOwnPropertyNames(next).every(function(k){
+	//        return next[k] === pre[k]
+	//      })
+	//  }else{
+	//    return r1
+	//  }
+	//}
 
 
 	var raf,
@@ -172,6 +186,18 @@
 	  })
 	}
 
+	var port = chrome.runtime.connect(extensionId)
+	port.onMessage.addListener(function (m) {
+
+	  console.log(m);
+
+	  switch (m.type){
+	    case msgType.BAN_JS:
+	      reqScript(m.message);
+	      break;
+	  }
+	})
+
 	window.variablesWatch = function(dataName,getData){
 
 	  var dataNameKey = dataName + Date.now() + Object.keys(watchMap).length
@@ -183,20 +209,18 @@
 
 	  refresh()
 	}
-
-	i=0;
-	variablesWatch('data',function(){
-	  return i++
-	})
-
-	variablesWatch('data',function(){
-	  return {
-	    v:i++
-	  }
-	})
+	//
+	//i=0;
+	//variablesWatch('data',function(){return i++})
+	//
+	//variablesWatch('data',function(){
+	//  return {
+	//    v:i++
+	//  }
+	//})
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -16791,10 +16815,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(7)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(9)(module)))
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -16810,11 +16834,11 @@
 
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(9)
-	var _ = __webpack_require__(6)
+	__webpack_require__(11)
+	var _ = __webpack_require__(8)
 
 	var wvContainer = document.createElement('div');
 	wvContainer.className = 'wv-container'
@@ -16869,16 +16893,16 @@
 	}
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(10);
+	var content = __webpack_require__(12);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(12)(content, {});
+	var update = __webpack_require__(14)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -16895,10 +16919,10 @@
 	}
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(11)();
+	exports = module.exports = __webpack_require__(13)();
 	// imports
 
 
@@ -16909,7 +16933,7 @@
 
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/*
@@ -16965,7 +16989,7 @@
 
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

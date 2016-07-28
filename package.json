@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/JavascriptTips/javascript-monitor#readme",
   "dependencies": {
+    "ajax-lite": "0.0.14",
     "webpack": "^1.13.1"
   }
 }
