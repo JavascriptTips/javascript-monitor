@@ -7,6 +7,8 @@
     z-index: 9999;
 
     display: flex;
+
+    visibility: hidden;
 }
 .wv-container > div{
     margin-right: 2px;

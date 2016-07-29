@@ -3,13 +3,11 @@ var _ = require('lodash')
 
 var wvContainer = document.createElement('div');
 wvContainer.className = 'wv-container'
-
 document.body.appendChild(wvContainer)
 
 var variablesList = [];
 
 function renderList(container,list){
-
 
   list.forEach(function (obj) {
 
@@ -48,6 +46,8 @@ module.exports = {
     variablesList[i] = variables;
 
     wvContainer.innerHTML = ''
+
+    wvContainer.style.visibility = 'visible';
 
     renderList(wvContainer,variablesList)
   }
